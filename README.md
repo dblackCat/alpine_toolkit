@@ -187,3 +187,30 @@ two new directives.
 <script src="https://unpkg.com/alpinejs" defer></script>
 <script src="src/x-socket/x-socket.js"></script>
 ```
+
+## Try plugins for builds in the ES module
+
+So far, these plugins cannot be installed via npm. 
+But in the src directory of the repository you will find ready-made modules for your builds.
+
+### You can connect plugins in your bootstrap.js file
+```js
+/**
+ * Import library
+ */
+import Alpine from "alpinejs";
+
+/**
+ * Import alpine plugins
+ */
+import xGlobal from './src/x-global-module';
+import xSocket from './src/x-socket-module';
+
+
+Alpine.plugin(xGlobal);
+Alpine.plugin(xSocket);
+
+window.document.alpine = Alpine;
+
+Alpine.start();
+```
