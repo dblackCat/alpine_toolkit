@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+
+    <style>
+        html {
+            background: #101010;
+            font-family: 'monospace';
+            color: #e3e3e3;
+            font-size: 20px;
+        }
+        .page {
+            width: 960px;
+            max-width: 100%;
+            margin: 0 auto;
+        }
+        .box {
+            background: #000000;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+        a {
+            text-decoration: none;
+        }
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .actions a {
+            background: #151f4b;
+            color: inherit;
+            padding: 0.5rem;
+        }
+        .alert {
+            display: none;
+            padding: 1rem;
+            background: #151f4b;
+        }
+        .alert.--active {
+            display: block;
+        }
+        .alert__success {
+            background: #114711;
+        }
+        .alert__danger {
+            background: #3f0d0d;
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <h2>Alpine.js - xGlobal plugin demo</h2>
+
+        <div class="box">
+            <p>Anonymous component - x-data="{}"</p>
+            <div x-data="{}" class="actions">
+                <a href="#" @click.prevent="Components.alert.show('Success', 'success')">Show success alert</a>
+                <a href="#" @click.prevent="Components.alert.show('Info', 'info')">Show info alert</a>
+                <a href="#" @click.prevent="Components.alert.show('Danger', 'danger')">Show danger alert</a>
+                <a href="#" @click.prevent="Components.alert.hide()">Close alert</a>
+            </div>
+        </div>
+
+        <div class="box">
+            <p>Global component x-data="alert" x-global="alert"</p>
+            <div class="alert" x-global="alert" x-data="alert" x-bind="bindAlert"></div>
+        </div>
+
+        <p>Global components are available in any js code and in any alpine component.</p>
+
+        <p>They are convenient to use for modal windows, menus, and so on.</p>
+
+        <br>
+        <br>
+
+        <h2>Alpine.js - xSocket plugin demo</h2>
+
+        <div class="box">
+            <p>Anonymous component - x-data="{}" x-socket="demo"</p>
+            <div x-data="{}" x-socket="demo" class="actions">
+                <a href="#" @click.prevent="connected.alert.show('Success', 'success')">Show success alert</a>
+                <a href="#" @click.prevent="connected.alert.show('Info', 'info')">Show info alert</a>
+                <a href="#" @click.prevent="connected.alert.show('Danger', 'danger')">Show danger alert</a>
+                <a href="#" @click.prevent="connected.alert.hide()">Close alert</a>
+            </div>
+
+            <div class="box" style="background: #181818">
+                <p>Nested component x-data="alert" x-connect.demo="alert"</p>
+                <div class="alert" x-connect.demo="alert" x-data="alert" x-bind="bindAlert"></div>
+            </div>
+        </div>
+
+        <p>Socket-connected components are usually useful for reusable use. For example, you have many forms and each has a preloader and an alert. </p>
+
+        <p>With sockets, you can reduce the amount of code and make your components more versatile.</p>
+    </div>
+
+
+    <div x-data="{message: 'test'}" x-global="myComponent"></div>
+
+    <div x-data="{}">
+        <!-- Anonymous component -->
+        <span x-text="Components.myComponent.message"></span>
+    </div>
+
+    <!-- Include alpine-->
+    <script src="https://unpkg.com/alpinejs" defer></script>
+    <script src="src/x-global/x-global.js"></script>
+    <script src="src/x-socket/x-socket.js"></script>
+
+    <script>
+        /**
+         * Alert demo component
+         */
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('alert', () => ({
+                message: null,
+                type: null,
+
+
+                /**
+                 * Show alert
+                 *
+                 * @param message
+                 * @param type
+                 */
+                show(message, type = 'danger') {
+                    this.message = message;
+                    this.type    = type;
+                },
+
+
+                /**
+                 * Hide alert
+                 */
+                hide() {
+                    this.message = null;
+                    this.type    = null;
+                },
+
+
+                /**
+                 * Bind alert
+                 */
+                bindAlert: {
+                    [':class']() {
+                        let classList = '';
+
+                        if (this.message) {
+                            classList += '--active ';
+                        }
+
+                        classList += 'alert__' + this.type;
+
+                        return classList;
+                    },
+                    ['x-text']() {
+                        return this.message;
+                    },
+                    ['@click']() {
+                        this.hide();
+                    }
+                },
+            }));
+        });
+    </script>
+</body>
+</html>
