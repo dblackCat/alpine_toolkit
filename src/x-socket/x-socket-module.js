@@ -11,7 +11,7 @@ export default function (Alpine) {
         try {
             let socketSelector  = '[x-socket="' + socketName + '"]';
 
-            let socketComponent    = document.querySelector(socketSelector)._x_dataStack[0];
+            let socketComponent = el.closest(socketSelector)._x_dataStack[0];
 
             if (!socketComponent.connected) {
                 socketComponent.connected = {};
